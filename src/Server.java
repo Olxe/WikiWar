@@ -1,8 +1,5 @@
 import com.sun.net.httpserver.HttpServer;
-import handler.GameCreateHandler;
-import handler.GameJoinHandler;
-import handler.StyleHandler;
-import handler.WikiHandler;
+import handler.*;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -25,6 +22,8 @@ public class Server extends Thread {
             httpServer.createContext("/create", new GameCreateHandler());
 
             httpServer.createContext("/join/", new GameJoinHandler());
+
+            httpServer.createContext("/start/", new StartHandler());
 
             httpServer.setExecutor(executor);
             httpServer.start();

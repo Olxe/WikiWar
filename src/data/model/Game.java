@@ -18,4 +18,8 @@ public class Game {
             this.players.put(player.getPseudo(), player);
         }
     }
+
+    public HashMap<String, Player> getPlayers() {
+        return this.players;
+    }
 }
