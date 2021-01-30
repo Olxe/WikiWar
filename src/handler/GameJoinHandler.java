@@ -20,9 +20,14 @@ public class GameJoinHandler implements HttpHandler {
 
         Map<String, String> params = Tools.queryToMap(exchange.getRequestURI().getQuery());
 
-        if(GameList.getInstance().getRooms().containsKey(roomNumber.toUpperCase()) && params.containsKey("pseudo")) {
-            GameList.getInstance().getRooms().get(roomNumber.toUpperCase()).addPlayer(new Player(params.get("pseudo")));
-            SimpleQuery.sendMessage(exchange, roomNumber.toUpperCase());
+        if(GameList.getInstance().getRooms().containsKey(roomNumber.toUpperCase())) {
+            if(params.containsKey("pseudo")) {
+                GameList.getInstance().getRooms().get(roomNumber.toUpperCase()).addPlayer(new Player(params.get("pseudo")));
+                SimpleQuery.sendMessage(exchange, roomNumber.toUpperCase());
+            }
+            else {
+                SimpleQuery.sendError(exchange, 409, "Pseudo déjà prit !");
+            }
         }
         else {
             SimpleQuery.sendError(exchange, 404, "La partie n'existe pas !");
