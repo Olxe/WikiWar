@@ -16,24 +16,6 @@ public class ServerHandler implements HttpHandler {
     }
 
     private void readFile(HttpExchange httpExchange) {
-//        String path = "res/Microsoft Word — Wikipédia.html";
-//        File file = new File(path);
-//        byte [] bytearray  = new byte [(int)file.length()];
-//        try {
-//            FileInputStream fis = new FileInputStream(file);
-//            BufferedInputStream bis = new BufferedInputStream(fis);
-//            //noinspection ResultOfMethodCallIgnored
-//            bis.read(bytearray, 0, bytearray.length);
-//
-//            httpExchange.sendResponseHeaders(200, file.length());
-//            OutputStream os = httpExchange.getResponseBody();
-//            os.write(bytearray,0,bytearray.length);
-//            os.close();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
         String url1 = "https://fr.wikipedia.org/w/api.php?format=xml&action=query&prop=extracts&titles=Stack%20Overflow&redirects=true";
         String url2 = "https://fr.wikipedia.org/wiki/Star_Wars";
         String url3 = "https://en.wikipedia.org/w/api.php?action=parse&page=Doritos&prop=text|headhtml";
