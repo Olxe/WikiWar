@@ -1,19 +1,22 @@
 package data;
 
+import data.model.Game;
+
 import java.util.HashMap;
 
-public class RoomData {
-    private HashMap<String, String> rooms = new HashMap<>();
+public class GameList {
+    //Code + game obj
+    private HashMap<String, Game> games = new HashMap<>();
 
-    private RoomData() {}
+    private GameList() {}
 
-    private static RoomData instance = new RoomData();
+    private static GameList instance = new GameList();
 
-    public static RoomData getInstance() {
+    public static GameList getInstance() {
         return instance;
     }
 
-    public HashMap<String, String> getRooms() {
-        return this.rooms;
+    public HashMap<String, Game> getRooms() {
+        return this.games;
     }
 }
