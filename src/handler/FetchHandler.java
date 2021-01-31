@@ -15,8 +15,10 @@ import java.util.Map;
 public class FetchHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        Path path = Paths.get(exchange.getRequestURI().getPath());
-        String roomNumber = path.getFileName().toString();
+        String path = exchange.getRequestURI().getPath();
+
+        String[] parts = path.split("/");
+        String roomNumber = parts[2];
 
         Map<String, String> params = Tools.queryToMap(exchange.getRequestURI().getQuery());
 

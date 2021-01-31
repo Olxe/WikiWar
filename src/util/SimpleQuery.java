@@ -13,6 +13,9 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SimpleQuery {
     public static void send(HttpExchange exchange, String response) {
@@ -91,7 +94,7 @@ public class SimpleQuery {
 
     public static void sendHtmlWikiPage(HttpExchange exchange, String title, String pseudo, String roomNumber) {
         Player player = GameList.getInstance().getRooms().get(roomNumber).getPlayers().get(pseudo);
-        player.getVisistedPage().put(title, "https://en.wikipedia.org/w/api.php?action=parse&format=json&page=" + title + "&prop=text|links");
+        player.getVisistedPage().put(title, "https://fr.wikipedia.org/w/api.php?action=parse&format=json&page=" + title + "&prop=text|links");
         player.increment();
 
         if(GameList.getInstance().getRooms().get(roomNumber).getTitleEnd().equals(title)) {
@@ -100,7 +103,7 @@ public class SimpleQuery {
             return;
         }
 
-        String result = SimpleQuery.get("https://en.wikipedia.org/w/api.php?action=parse&format=json&page=" + title + "&prop=text|links");
+        String result = SimpleQuery.get("https://fr.wikipedia.org/w/api.php?action=parse&format=json&page=" + title + "&prop=text|links");
         if(result != null) {
             try {
                 Object obj = new JSONParser().parse(result);
@@ -109,12 +112,34 @@ public class SimpleQuery {
                 JSONObject text = (JSONObject) parser.get("text");
                 String contain = text.get("*").toString();
 
-                JSONArray links = (JSONArray) parser.get("links");
-                for(Object l : links) {
-                    JSONObject link = (JSONObject) l;
-                    String newLink = link.get("*").toString().replaceAll("\\s+","_");
-                    contain = contain.replaceAll("/wiki/" + newLink, "/wiki/" + newLink + "?pseudo=" + pseudo + "&room=" + roomNumber);
+                Pattern p = Pattern.compile("href=\"(.*?)\"");
+                Matcher m = p.matcher(contain);
+
+                HashMap<String, String> urls = new HashMap<>();
+
+
+                String url;
+                while (m.find()) {
+                    url = m.group(1); // this variable should contain the link URL
+
+                    if(!urls.containsKey(url)) {
+                        String[] parts = url.split("/");
+                        if(parts.length > 1 && parts[1].equals("wiki")) {
+                            contain = contain.replace(url, url + "?pseudo=" + pseudo + "&room=" + roomNumber);
+                        }
+                        else {
+                            contain = contain.replace(url, "#");
+                        }
+
+                        urls.put(url, url);
+                    }
                 }
+//                JSONArray links = (JSONArray) parser.get("links");
+//                for(Object l : links) {
+//                    JSONObject link = (JSONObject) l;
+//                    String newLink = link.get("*").toString().replaceAll("\\s+","_");
+//                    contain = contain.replaceAll("/wiki/" + newLink, "/wiki/" + newLink + "?pseudo=" + pseudo + "&room=" + roomNumber);
+//                }
 
                 String htmlStr =
                         "<html>" +
@@ -122,8 +147,8 @@ public class SimpleQuery {
                                 "<meta charset=\"UTF-8\">" +
                                 "<title>WikiWarséé</title>" +
                                 "<link rel=\"stylesheet\" href=\"/styles/style.css\"/>" +
-                                "<link rel=\"stylesheet\" href=\"https://en.wikipedia.org/w/load.php?lang=en&modules=ext.uls.interlanguage%7Cext.visualEditor.desktopArticleTarget.noscript%7Cext.wikimediaBadges%7Cskins.vector.styles.legacy%7Cwikibase.client.init&only=styles&skin=vector\"/>" +
-                                "<link rel=\"stylesheet\" href=\"https://en.wikipedia.org/w/load.php?lang=en&modules=site.styles&only=styles&skin=vector\"/>" +
+                                "<link rel=\"stylesheet\" href=\"https://fr.wikipedia.org/w/load.php?lang=en&modules=ext.uls.interlanguage%7Cext.visualEditor.desktopArticleTarget.noscript%7Cext.wikimediaBadges%7Cskins.vector.styles.legacy%7Cwikibase.client.init&only=styles&skin=vector\"/>" +
+                                "<link rel=\"stylesheet\" href=\"https://fr.wikipedia.org/w/load.php?lang=en&modules=site.styles&only=styles&skin=vector\"/>" +
                                 "</head>" +
                                 "<body class=\"mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Test rootpage-Test skin-vector action-view skin-vector-legacy\">" +
                                 "<div id=\"content\" role=\"main\" class=\"bodyMargin\">" + //class="mw-body"

@@ -13,21 +13,25 @@ import java.util.Map;
 public class WikiHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        Path path = Paths.get(exchange.getRequestURI().toString());
-        String title = path.getFileName().toString();
+        String path = exchange.getRequestURI().getRawPath();
+
+        String[] parts = path.split("/");
+        String title = parts[2];
 
         if(exchange.getRequestURI().getQuery() != null) {
             Map<String, String> params = Tools.queryToMap(exchange.getRequestURI().getQuery());
 
             if(params.containsKey("pseudo") && params.containsKey("room")) {
                 SimpleQuery.sendHtmlWikiPage(exchange, title, params.get("pseudo"), params.get("room"));
+                return;
             }
             else {
                 SimpleQuery.sendCode(exchange, 409, "Error de pseudo ):");
+                return;
             }
         }
 
 
-        SimpleQuery.sendHtmlWikiPage(exchange, title, "MIKA", "0000");
+        SimpleQuery.sendCode(exchange, 404, "Error 404 ):");
     }
 }
