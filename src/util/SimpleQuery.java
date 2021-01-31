@@ -145,7 +145,7 @@ public class SimpleQuery {
                         "<html>" +
                                 "<head>" +
                                 "<meta charset=\"UTF-8\">" +
-                                "<title>WikiWarséé</title>" +
+                                "<title>WikiWars</title>" +
                                 "<link rel=\"stylesheet\" href=\"/styles/style.css\"/>" +
                                 "<link rel=\"stylesheet\" href=\"https://fr.wikipedia.org/w/load.php?lang=en&modules=ext.uls.interlanguage%7Cext.visualEditor.desktopArticleTarget.noscript%7Cext.wikimediaBadges%7Cskins.vector.styles.legacy%7Cwikibase.client.init&only=styles&skin=vector\"/>" +
                                 "<link rel=\"stylesheet\" href=\"https://fr.wikipedia.org/w/load.php?lang=en&modules=site.styles&only=styles&skin=vector\"/>" +

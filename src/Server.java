@@ -3,6 +3,9 @@ import data.GameList;
 import data.model.Game;
 import data.model.Player;
 import handler.*;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import util.SimpleQuery;
 
 import java.io.*;
@@ -42,6 +45,21 @@ public class Server extends Thread {
 
             httpServer.setExecutor(executor);
             httpServer.start();
+
+
+//            String content = SimpleQuery.get("https://en.wikipedia.org/api/rest_v1/page/random/summary");
+//            Object obj = null;
+//            try {
+//                obj = new JSONParser().parse(content);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//            JSONObject root = (JSONObject) obj;
+//            JSONObject titles = (JSONObject) root.get("titles");
+//            String canonical = titles.get("canonical").toString();
+//            String normalized = titles.get("normalized").toString();
+//
+//            System.out.println(canonical);
 
             GameList.getInstance().getRooms().put("0000", new Game("MIKA", "Villeurbanne", "France"));
             GameList.getInstance().getRooms().get("0000").addPlayer(new Player("MIKA"));

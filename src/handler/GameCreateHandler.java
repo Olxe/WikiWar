@@ -9,10 +9,27 @@ import util.Tools;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
 public class GameCreateHandler implements HttpHandler {
+    private ArrayList<String> pages = new ArrayList<>() {
+        {
+            add("Villeurbanne");
+            add("Montre");
+            add("Atome");
+            add("Voiture");
+            add("Crabe");
+            add("Mars");
+            add("Chien");
+            add("Route");
+            add("Ordinateur");
+            add("Tapis");
+            add("Sport");
+            add("Avion");
+        }
+    };
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         Map<String, String> params = Tools.queryToMap(exchange.getRequestURI().getQuery());
@@ -21,7 +38,13 @@ public class GameCreateHandler implements HttpHandler {
             int randomCode = new Random().nextInt(10000);
             String randomCode4digit = String.format("%04d", randomCode);
 
-            GameList.getInstance().getRooms().put(randomCode4digit.toUpperCase(), new Game(params.get("pseudo"), "Villeurbanne", "France"));
+            String start = pages.get(new Random().nextInt(pages.size()));
+            String end = pages.get(new Random().nextInt(pages.size()));
+            while (start.equals(end)) {
+                end = pages.get(new Random().nextInt(pages.size()));
+            }
+
+            GameList.getInstance().getRooms().put(randomCode4digit.toUpperCase(), new Game(params.get("pseudo"), start, end));
 
             System.out.println("RANDOM ROOM NUMBER CREATED " + randomCode4digit);
 
