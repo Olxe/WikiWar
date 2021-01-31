@@ -52,11 +52,11 @@ public class TCP_server implements Callable {
         }
     }
 
-    public void onWin() {
+    public void onWin(String pseudo, String clique) {
         System.out.println("Win event");
 
         for(TCP_client client : clients) {
-            client.send("WIN");
+            client.send(pseudo + ";" + clique);
         }
     }
 

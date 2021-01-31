@@ -90,9 +90,11 @@ public class SimpleQuery {
     }
 
     public static void sendHtmlWikiPage(HttpExchange exchange, String title, String pseudo, String roomNumber) {
+        Player player = GameList.getInstance().getRooms().get(roomNumber).getPlayers().get(pseudo);
+
         if(GameList.getInstance().getRooms().get(roomNumber).getTitleEnd().equals(title)) {
             SimpleQuery.sendCode(exchange, 202, "GG");
-            TCP_server.getInstance().onWin();
+            TCP_server.getInstance().onWin(player.getPseudo(), Integer.toString(player.getPoint()));
             return;
         }
 
@@ -116,7 +118,6 @@ public class SimpleQuery {
 //                    contain = contain.replaceAll("<a href=\"https(.?)</a>", "LIEN MORT");
 //                }
 
-                Player player = GameList.getInstance().getRooms().get(roomNumber).getPlayers().get(pseudo);
                 player.increment();
 
                 String htmlStr =
