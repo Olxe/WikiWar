@@ -1,4 +1,6 @@
 import com.sun.net.httpserver.HttpServer;
+import data.GameList;
+import data.model.Game;
 import handler.*;
 
 import java.io.*;
@@ -25,8 +27,14 @@ public class Server extends Thread {
 
             httpServer.createContext("/start/", new StartHandler());
 
+            httpServer.createContext("/fetch/", new FetchHandler());
+
+            httpServer.createContext("/players/", new PlayersHandler());
+
             httpServer.setExecutor(executor);
             httpServer.start();
+
+            GameList.getInstance().getRooms().put("0000", new Game("MIKA", "Villeurbanne", "France"));
 
             System.out.println("Server started !");
 

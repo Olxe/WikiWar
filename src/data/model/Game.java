@@ -11,6 +11,7 @@ public class Game {
     public Game(String host, String titleStart, String titleEnd) {
         this.titleStart = titleStart;
         this.titleEnd = titleEnd;
+        this.host = host;
     }
 
     public void addPlayer(Player player) {
@@ -21,5 +22,21 @@ public class Game {
 
     public HashMap<String, Player> getPlayers() {
         return this.players;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public String getTitleStart() {
+        return titleStart;
+    }
+
+    public String getTitleEnd() {
+        return titleEnd;
+    }
+
+    public void setTitleEnd(String titleEnd) {
+        this.titleEnd = titleEnd;
     }
 }

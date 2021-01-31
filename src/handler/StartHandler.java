@@ -3,7 +3,6 @@ package handler;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import data.GameList;
-import data.model.Player;
 import util.SimpleQuery;
 import util.Tools;
 
@@ -21,9 +20,8 @@ public class StartHandler implements HttpHandler {
         Map<String, String> params = Tools.queryToMap(exchange.getRequestURI().getQuery());
 
         if(GameList.getInstance().getRooms().containsKey(roomNumber.toUpperCase())) {
-            if(params.containsKey("pseudo")) {
-                GameList.getInstance().getRooms().get(roomNumber.toUpperCase()).addPlayer(new Player(params.get("pseudo")));
-                SimpleQuery.sendMessage(exchange, roomNumber.toUpperCase());
+            if(params.containsKey("pseudo") && GameList.getInstance().getRooms().get(roomNumber.toUpperCase()).getHost().equals(params.get("pseudo"))) {
+                SimpleQuery.sendMessage(exchange, "Ok, partie lancé");
             }
             else {
                 SimpleQuery.sendError(exchange, 409, "Seul(e) l'hôte peut lancer la partie ):");
