@@ -144,7 +144,7 @@ public class SimpleQuery {
                 e.printStackTrace();
             }
         }
-        
+
         SimpleQuery.sendCode(exchange, 404, "ERROR 404");
     }
 }
