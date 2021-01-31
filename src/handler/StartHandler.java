@@ -24,11 +24,11 @@ public class StartHandler implements HttpHandler {
                 SimpleQuery.sendMessage(exchange, "Ok, partie lancé");
             }
             else {
-                SimpleQuery.sendError(exchange, 409, "Seul(e) l'hôte peut lancer la partie ):");
+                SimpleQuery.sendCode(exchange, 409, "Seul(e) l'hôte peut lancer la partie ):");
             }
         }
         else {
-            SimpleQuery.sendError(exchange, 404, "La partie n'existe pas !");
+            SimpleQuery.sendCode(exchange, 404, "La partie n'existe pas !");
         }
     }
 }

@@ -5,7 +5,6 @@ class Main {
         Server server = new Server();
         server.start();
 
-        TCP_server tcp_server = new TCP_server();
-        tcp_server.run();
+        TCP_server.getInstance().run();
     }
 }

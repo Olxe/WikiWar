@@ -1,5 +1,6 @@
 package tcp;
 
+import data.GameList;
 import util.Callable;
 
 import java.io.IOException;
@@ -9,6 +10,11 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class TCP_server implements Callable {
+    private static TCP_server instance = new TCP_server();
+    public static TCP_server getInstance() {
+        return instance;
+    }
+
     private final static int port = 5000;
     private boolean running = true;
     private ArrayList<TCP_client> clients = new ArrayList<>();
@@ -43,6 +49,14 @@ public class TCP_server implements Callable {
         System.out.println("start event");
         for(TCP_client client : clients) {
             client.send("START");
+        }
+    }
+
+    public void onWin() {
+        System.out.println("Win event");
+
+        for(TCP_client client : clients) {
+            client.send("WIN");
         }
     }
 

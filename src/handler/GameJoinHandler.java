@@ -29,13 +29,11 @@ public class GameJoinHandler implements HttpHandler {
                 SimpleQuery.sendMessage(exchange, roomNumber.toUpperCase());
             }
             else {
-                SimpleQuery.sendError(exchange, 409, "Error de pseudo ):");
+                SimpleQuery.sendCode(exchange, 409, "Error de pseudo ):");
             }
         }
         else {
-            SimpleQuery.sendError(exchange, 404, "La partie n'existe pas !");
+            SimpleQuery.sendCode(exchange, 404, "La partie n'existe pas !");
         }
     }
-
-
 }

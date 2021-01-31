@@ -20,7 +20,11 @@ public class PlayersHandler implements HttpHandler {
             for(String name : GameList.getInstance().getRooms().get(roomNumber.toUpperCase()).getPlayers().keySet()) {
                 nameList.append(name).append(";");
             }
+
             SimpleQuery.sendMessage(exchange, nameList.toString());
+        }
+        else {
+            SimpleQuery.sendCode(exchange, 404, "La partie n'existe pas !");
         }
     }
 }

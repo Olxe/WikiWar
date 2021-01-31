@@ -1,7 +1,9 @@
 import com.sun.net.httpserver.HttpServer;
 import data.GameList;
 import data.model.Game;
+import data.model.Player;
 import handler.*;
+import util.SimpleQuery;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -31,10 +33,18 @@ public class Server extends Thread {
 
             httpServer.createContext("/players/", new PlayersHandler());
 
+//            httpServer.createContext("/", exchange -> {
+////                SimpleQuery.sendError(exchange, 404, "Not found");
+//                OutputStream os = exchange.getResponseBody();
+////                os.write(bs);
+//                os.close();
+//            });
+
             httpServer.setExecutor(executor);
             httpServer.start();
 
             GameList.getInstance().getRooms().put("0000", new Game("MIKA", "Villeurbanne", "France"));
+            GameList.getInstance().getRooms().get("0000").addPlayer(new Player("MIKA"));
 
             System.out.println("Server started !");
 

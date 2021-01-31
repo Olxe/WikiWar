@@ -1,14 +1,15 @@
 package util;
 
 import com.sun.net.httpserver.HttpExchange;
+import data.GameList;
+import data.model.Player;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import tcp.TCP_server;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -72,7 +73,7 @@ public class SimpleQuery {
     }
 
     //Permet d'envoyer une error
-    public static void sendError(HttpExchange exchange, int respCode, String errDesc) {
+    public static void sendCode(HttpExchange exchange, int respCode, String errDesc) {
         String message = "HTTP error " + respCode + ": " + errDesc;
 
         byte[] bs = message.getBytes(StandardCharsets.UTF_8);
@@ -88,7 +89,13 @@ public class SimpleQuery {
         }
     }
 
-    public static void sendHtmlWikiPage(HttpExchange exchange, String title) {
+    public static void sendHtmlWikiPage(HttpExchange exchange, String title, String pseudo, String roomNumber) {
+        if(GameList.getInstance().getRooms().get(roomNumber).getTitleEnd().equals(title)) {
+            SimpleQuery.sendCode(exchange, 202, "GG");
+            TCP_server.getInstance().onWin();
+            return;
+        }
+
         String result = SimpleQuery.get("https://en.wikipedia.org/w/api.php?action=parse&format=json&page=" + title + "&prop=text|links");
         if(result != null) {
             try {
@@ -97,6 +104,20 @@ public class SimpleQuery {
                 JSONObject parser = (JSONObject) root.get("parse");
                 JSONObject text = (JSONObject) parser.get("text");
                 String contain = text.get("*").toString();
+
+                JSONArray links = (JSONArray) parser.get("links");
+                for(Object l : links) {
+                    JSONObject link = (JSONObject) l;
+                    String newLink = link.get("*").toString().replaceAll("\\s+","_");
+                    contain = contain.replaceAll("/wiki/" + newLink, "/wiki/" + newLink + "?pseudo=" + pseudo + "&room=" + roomNumber);
+                }
+
+//                if(contain.contains("<a href=\"https(.?)</a>")) {
+//                    contain = contain.replaceAll("<a href=\"https(.?)</a>", "LIEN MORT");
+//                }
+
+                Player player = GameList.getInstance().getRooms().get(roomNumber).getPlayers().get(pseudo);
+                player.increment();
 
                 String htmlStr =
                         "<html>" +
@@ -109,6 +130,7 @@ public class SimpleQuery {
                                 "</head>" +
                                 "<body class=\"mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Test rootpage-Test skin-vector action-view skin-vector-legacy\">" +
                                 "<div id=\"content\" role=\"main\" class=\"bodyMargin\">" + //class="mw-body"
+                                "<h1>" + GameList.getInstance().getRooms().get(roomNumber).getTitleStart() + " -> " + GameList.getInstance().getRooms().get(roomNumber).getTitleEnd() + " | Nombre de clique " + player.getPoint() + "</h1>" +
                                 "<h1 id=\"firstHeading\" class=\"firstHeading\">" + parser.get("title").toString() + "</h1>" +
                                 "<div id=\"bodyContent\" class=\"mw-body-content\">" +
                                 "<div id=\"siteSub\" class=\"noprint\">From Wikipedia, the free encyclopedia</div>" +
@@ -119,12 +141,30 @@ public class SimpleQuery {
                                 "</body>" +
                                 "</html>";
 
+//                if(contain.matches(".*<a (.*?)href=\"https(.*?)<\\/a>.*")) {
+//                    Pattern p=Pattern.compile("<a (.*?)href=\"https(.*?)<\\/a>");
+//                    Matcher m=p.matcher(contain);
+//                    while (m.find())
+//                    {
+//                        String lienComplet = m.group();
+//                        System.out.println("Le lien complet est " + lienComplet);
+//
+//                        String nouveauLien = lienComplet.substring(0, lienComplet.indexOf("a") + 1);
+//
+//                        nouveauLien += " disabled=\"disabled\" ";
+//                        nouveauLien += lienComplet.substring(lienComplet.indexOf("a") + 2, lienComplet.length());
+//
+//                        contain = contain.replace(lienComplet, nouveauLien);
+//                    }
+//                }
+
                 SimpleQuery.send(exchange, htmlStr);
                 return;
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-        SimpleQuery.sendError(exchange, 404, "BLABLABLA");
+
+        SimpleQuery.sendCode(exchange, 404, "ERROR 404");
     }
 }

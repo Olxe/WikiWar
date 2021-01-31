@@ -15,6 +15,7 @@ public class TCP_main {
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 String message = in.readLine();
                 System.out.println(message);
+                //si msg == truc -> requete HTTP
             }
         } catch (UnknownHostException ex) {
             System.out.println("Server not found: " + ex.getMessage());

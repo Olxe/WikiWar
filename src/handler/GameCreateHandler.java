@@ -36,6 +36,6 @@ public class GameCreateHandler implements HttpHandler {
             }
         }
 
-        SimpleQuery.sendError(exchange, 404, "Impossible créer la partie ):");
+        SimpleQuery.sendCode(exchange, 404, "Impossible créer la partie ):");
     }
 }
