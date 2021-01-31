@@ -56,7 +56,7 @@ public class TCP_server implements Callable {
         System.out.println("Win event");
 
         for(TCP_client client : clients) {
-            client.send(pseudo + ";" + clique);
+            client.send("WIN;" + pseudo + ";" + clique);
         }
     }
 

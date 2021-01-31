@@ -20,6 +20,7 @@ public class GameCreateHandler implements HttpHandler {
         if(params.containsKey("pseudo")) {
             int randomCode = new Random().nextInt(10000);
             String randomCode4digit = String.format("%04d", randomCode);
+            
             GameList.getInstance().getRooms().put(randomCode4digit.toUpperCase(), new Game(params.get("pseudo"), "Villeurbanne", "France"));
 
             System.out.println("RANDOM ROOM NUMBER CREATED " + randomCode4digit);

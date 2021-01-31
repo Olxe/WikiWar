@@ -93,7 +93,7 @@ public class SimpleQuery {
         Player player = GameList.getInstance().getRooms().get(roomNumber).getPlayers().get(pseudo);
 
         if(GameList.getInstance().getRooms().get(roomNumber).getTitleEnd().equals(title)) {
-            SimpleQuery.sendCode(exchange, 202, "GG");
+            SimpleQuery.sendMessage(exchange, "GG");
             TCP_server.getInstance().onWin(player.getPseudo(), Integer.toString(player.getPoint()));
             return;
         }
