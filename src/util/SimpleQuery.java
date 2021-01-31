@@ -91,6 +91,8 @@ public class SimpleQuery {
 
     public static void sendHtmlWikiPage(HttpExchange exchange, String title, String pseudo, String roomNumber) {
         Player player = GameList.getInstance().getRooms().get(roomNumber).getPlayers().get(pseudo);
+        player.getVisistedPage().put(title, "https://en.wikipedia.org/w/api.php?action=parse&format=json&page=" + title + "&prop=text|links");
+        player.increment();
 
         if(GameList.getInstance().getRooms().get(roomNumber).getTitleEnd().equals(title)) {
             SimpleQuery.sendMessage(exchange, "GG");
@@ -114,12 +116,6 @@ public class SimpleQuery {
                     contain = contain.replaceAll("/wiki/" + newLink, "/wiki/" + newLink + "?pseudo=" + pseudo + "&room=" + roomNumber);
                 }
 
-//                if(contain.contains("<a href=\"https(.?)</a>")) {
-//                    contain = contain.replaceAll("<a href=\"https(.?)</a>", "LIEN MORT");
-//                }
-
-                player.increment();
-
                 String htmlStr =
                         "<html>" +
                                 "<head>" +
@@ -142,30 +138,13 @@ public class SimpleQuery {
                                 "</body>" +
                                 "</html>";
 
-//                if(contain.matches(".*<a (.*?)href=\"https(.*?)<\\/a>.*")) {
-//                    Pattern p=Pattern.compile("<a (.*?)href=\"https(.*?)<\\/a>");
-//                    Matcher m=p.matcher(contain);
-//                    while (m.find())
-//                    {
-//                        String lienComplet = m.group();
-//                        System.out.println("Le lien complet est " + lienComplet);
-//
-//                        String nouveauLien = lienComplet.substring(0, lienComplet.indexOf("a") + 1);
-//
-//                        nouveauLien += " disabled=\"disabled\" ";
-//                        nouveauLien += lienComplet.substring(lienComplet.indexOf("a") + 2, lienComplet.length());
-//
-//                        contain = contain.replace(lienComplet, nouveauLien);
-//                    }
-//                }
-
                 SimpleQuery.send(exchange, htmlStr);
                 return;
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-
+        
         SimpleQuery.sendCode(exchange, 404, "ERROR 404");
     }
 }
